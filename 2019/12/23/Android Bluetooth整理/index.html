@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<script src="/js/src/click.js"></script>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Android Bluetooth整理 - Weikun</title>
+
+
+    <meta name="description" content="一篇关于Android的蓝牙知识介绍，我是一个搬运工。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Bluetooth整理">
+<meta property="og:url" content="http://mydearesther.github.io/2019/12/23/Android%20Bluetooth%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="Weikun">
+<meta property="og:description" content="一篇关于Android的蓝牙知识介绍，我是一个搬运工。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://mydearesther.github.io/images/og_image.png">
+<meta property="article:published_time" content="2019-12-23T09:30:00.000Z">
+<meta property="article:modified_time" content="2020-03-03T16:23:51.024Z">
+<meta property="article:author" content="Weikun">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="蓝牙">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mydearesther.github.io/images/og_image.png">
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Android Bluetooth整理" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+                <a class="navbar-item"
+                href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/MyDearEsther">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-10-tablet is-10-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-23T09:30:00.000Z">2019-12-23</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    43 分钟 读完 (大约 6385 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Android Bluetooth整理
+            
+        </h1>
+        <div class="content">
+            <p>一篇关于Android的蓝牙知识介绍，我是一个搬运工。</p>
+<a id="more"></a>  
+<h1 id="1-蓝牙概述"><a href="#1-蓝牙概述" class="headerlink" title="1. 蓝牙概述"></a>1. 蓝牙概述</h1><h2 id="1-1-历史发展"><a href="#1-1-历史发展" class="headerlink" title="1.1 历史发展"></a>1.1 历史发展</h2><p>蓝牙为一种无线技术标准，蓝牙技术最初由爱立信创制。技术始于爱立信公司的1994方案，它是研究在移动电话和其他配件间进行低功耗、低成本无线通信连接的方法。这项无线技术的名称取自古代丹麦维京国王Harald Blåtand的名字，他以统一了因宗教战争和领土争议而分裂的挪威与丹麦而闻名于世，而这个名字的英文便是Harald Bluetooth。</p>
+<table>
+<thead>
+<tr>
+<th>蓝牙版本</th>
+<th>发布时间</th>
+<th>最大传输速度</th>
+<th>传输距离</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.0</td>
+<td>1998</td>
+<td>723.1 Kbit/s</td>
+<td>10米</td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>2002</td>
+<td>810 Kbit/s</td>
+<td>10米</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>2003</td>
+<td>1 Mbit/s</td>
+<td>10米</td>
+</tr>
+<tr>
+<td>2.0+EDR</td>
+<td>2004</td>
+<td>2.1 Mbit/s</td>
+<td>10米</td>
+</tr>
+<tr>
+<td>2.1+EDR</td>
+<td>2007</td>
+<td>3 Mbit/s</td>
+<td>10米</td>
+</tr>
+<tr>
+<td>3.0+HS</td>
+<td>2009</td>
+<td>24 Mbit/s</td>
+<td>10米</td>
+</tr>
+<tr>
+<td>4.0</td>
+<td>2010</td>
+<td>24 Mbit/s</td>
+<td>50米</td>
+</tr>
+<tr>
+<td>4.1</td>
+<td>2013</td>
+<td>24 Mbit/s</td>
+<td>50米</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>2014</td>
+<td>24 Mbit/s</td>
+<td>50米</td>
+</tr>
+<tr>
+<td>5.0</td>
+<td>2016</td>
+<td>48 Mbit/s</td>
+<td>300米</td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>2019</td>
+<td>48 Mbit/s</td>
+<td>300米</td>
+</tr>
+</tbody></table>
+<p>1998年蓝牙1.0发布，2.1版本使用最广，即经典蓝牙，很多非智能设备也支持这个版本。到了蓝牙3.0就是所谓的高速蓝牙。<br>4.0以前为传统蓝牙，主要以BR(基础率)/EDR(增强数据率)为发展技术，以点对点网络拓扑结果创建一对一设备通信。<br>4.0/4.1及以后引入LE规范，即低功耗蓝牙，LE型蓝牙使用点对点（一对一）、广播（一对多）和网格（多对多）等多种网络拓扑结构。<br>实际使用中分为单模和双模版本，前者支持LE规范且不能喝蓝牙4.0之前的版本通信，后者同时支持LE和BR/EDR规范，并且兼容旧版蓝牙。<br>5.0 版本支持室内定位导航功能(结合WiFi时线高精度室内定位)，针对物联网进行了很多底层优化。</p>
+<h2 id="1-2-应用"><a href="#1-2-应用" class="headerlink" title="1.2 应用"></a>1.2 应用</h2><ul>
+<li>手机<br>  设备间无线通讯</li>
+<li>电脑与外设<br>  鼠标、键盘、耳机、打印机等</li>
+<li>汽车<br>  车载娱乐系统、监测和诊断机电系统等</li>
+<li>消费类电子产品<br>  电视、游戏机、游戏手柄等</li>
+<li>医疗<br>  心率监视器、血糖监测仪等</li>
+<li>可穿戴设备<br>  智能眼镜、耳机、运动相机等</li>
+<li>智能家居  </li>
+<li>位置导向式服务<br>  无线信号以确定物品位置</li>
+</ul>
+<h2 id="1-3-协议栈"><a href="#1-3-协议栈" class="headerlink" title="1.3 协议栈"></a>1.3 协议栈</h2><p>蓝牙协议栈主要由主机(Host)、控制器(Controller)、主机控制器接口(HCI)三部分组成。</p>
+<h3 id="1-3-1-Host"><a href="#1-3-1-Host" class="headerlink" title="1.3.1 Host"></a>1.3.1 Host</h3><p>Host层是对硬件的抽象，像PC端就可以理解为Host，但Host与具体的硬件无关。<br>Host包含逻辑链路控制和适配层(Logical Link control &amp; Adaption Protocol, L2CAP)、通道管理器（Channel Manager）、安全管理协议(SMP)和GAP等其他高层协议。<br>L2CAP主要起到数据缓冲和简单数据管理的作用，通道管理器负责创建，管理和关闭用于传输服务协议和应用程序数据流的L2CAP通道。<br>Profile 就是定义了一个实际的应用场景。具体来说，Profile 定义了蓝牙系统中从PHY（物理层）到 L2CAP 的每层以及核心规范之外的任何其他协议所需的功能和特性。应用的行为和数据格式也由 Profile 定义。<br>其中比较常用的配置文件就是GAP，即通用访问配置文件，所有蓝牙设备都必须实现的基本配置文件。</p>
+<ul>
+<li>BR/EDR型蓝牙中GAP定义每个设备为单一角色，其可能具备的功能包括设备如何相互发现，建立连接以及描述用于身份验证的安全关联模型。设备可能只具备其中一种或多种功能，比如只具有启动或接受连接功能。</li>
+<li>LE型蓝牙中GAP 定义了四个特定角色：Broadcaster，Observer，Peripheral 和 Central。如果底层 Controller 支持这些角色或角色组合，则设备也可同时支持多个角色。但是，在某一时刻只能支持其中一个角色。每个角色都指定了底层Controller的要求。这允许控制器针对特定用例进行优化。  </li>
+</ul>
+<p>RFCOMM 是一种简单的传输协议，其实也是用于仿真RS-232串口通信。RFCOMM支持在两个设备之间模拟多个串口，或者在多个设备之间模拟串口，最多支持 两个设备间 60 个串口的同时连接。SPP 可以视为仅是对 RFCOMM的简单封装。<br>A2DP高级音频分发配置文件，实现单声道或立体声高质量音频内容分配的协议和程序。典型的使用情况是将音乐内容从立体声音乐播放器流式传输到耳机或扬声器。  </p>
+<h3 id="1-3-2-Controller"><a href="#1-3-2-Controller" class="headerlink" title="1.3.2 Controller"></a>1.3.2 Controller</h3><p>Controllers可对应现实生活中的蓝牙芯片或者蓝牙适配器，是协议栈的底层实现，与硬件直接相关。<br>主控制器可以是以下三种：</p>
+<ul>
+<li>BR/EDR控制器（单模）</li>
+<li>LE控制器(单模)</li>
+<li>BR/EDR和LE组合控制器(双模)</li>
+</ul>
+<p>可选的还有一个或多个次要控制器(AMP)，AMP在蓝牙3.0后就引入了，主要和BR/EDR搭配使用，作为数据高速传输通道。<br>实际上还可以排列组合出其他几种单模或双模的控制器架构。</p>
+<h3 id="1-3-3-HCI"><a href="#1-3-3-HCI" class="headerlink" title="1.3.3 HCI"></a>1.3.3 HCI</h3><p>HCI(主机控制器接口)它为基带控制器、连接管理器、硬件状态和控制寄存器提供命令接口。<br>HCI层是可选的，在具有简单功能的蓝牙设备(如耳机)中，Host和控制器可以在同一微处理器上实现，而无需HCI。</p>
+<!-- - 核心协议层  
+    BaseBand(基带)、LMP(链路管理协议)、L2CAP(逻辑链路控制与适配器)、SDP(服务发现协议)
+- 线缆替换协议层  
+    RFCOMM(串口仿真协议)
+- 电话控制协议层  
+    TCS-BIN  
+- 选用协议层  
+    PPP、TCP、IP、UDP、OBEX、IrMC、WAP、WAE -->
+
+<h1 id="2-传统蓝牙"><a href="#2-传统蓝牙" class="headerlink" title="2. 传统蓝牙"></a>2. 传统蓝牙</h1><p>传统蓝牙或称经典蓝牙即蓝牙4.0版本之前，主要以BR/EDR为发展技术，以点对点网络拓扑结果创建一对一设备通信。</p>
+<h2 id="2-1-概述"><a href="#2-1-概述" class="headerlink" title="2.1 概述"></a>2.1 概述</h2><p>Android平台提供对蓝牙的通讯栈的支持，允许设备与其他设备进行无线传输数据。<br>传统蓝牙适用于较为耗电的操作，其中包括 Android 设备之间的流式传输和通信等。<br>应用层可通过Bluetooth API进行以下操作：   </p>
+<ul>
+<li>扫描其他蓝牙设备</li>
+<li>查询本地蓝牙适配器的配对蓝牙设备</li>
+<li>建立 RFCOMM 通道</li>
+<li>通过服务发现连接到其他设备</li>
+<li>与其他设备进行双向数据传输</li>
+<li>管理多个连接  </li>
+</ul>
+<h2 id="2-3-传统蓝牙-Android应用开发"><a href="#2-3-传统蓝牙-Android应用开发" class="headerlink" title="2.3 传统蓝牙 Android应用开发"></a>2.3 传统蓝牙 Android应用开发</h2><h3 id="2-3-1-权限"><a href="#2-3-1-权限" class="headerlink" title="2.3.1 权限"></a>2.3.1 权限</h3><p>使用蓝牙功能前必须在应用清单中声明以下权限:  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">manifest</span> <span class="attr">...</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 需要此权限才能执行任何蓝牙通信，例如请求连接、接受连接和传输数据等 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.BLUETOOTH"</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 如果您想让应用启动设备发现或操纵蓝牙设置，则除了 BLUETOOTH 权限以外，您还必须声明 BLUETOOTH_ADMIN 权限。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.BLUETOOTH_ADMIN"</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 应用需要此权限，因为蓝牙扫描可用于收集用户的位置信息。 --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Android 9及以下的版本中声明为 ACCESS_COARSE_LOCATION --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_FINE_LOCATION"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-3-2-BluetoothAdapter"><a href="#2-3-2-BluetoothAdapter" class="headerlink" title="2.3.2 BluetoothAdapter"></a>2.3.2 BluetoothAdapter</h3><p>所有蓝牙应用都需要蓝牙适配器（<strong>BluetoothAdapter</strong>），可通过静态方法<strong>getDefaultAdapter()</strong> 来获取适配器的实例对象，一个蓝牙设备只有一个蓝牙适配器。示例代码如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> BluetoothAdapter bluetoothAdapter;</span><br><span class="line">...</span><br><span class="line"><span class="comment">// 初始化 蓝牙适配器</span></span><br><span class="line"><span class="keyword">final</span> BluetoothManager bluetoothManager =</span><br><span class="line">        (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);</span><br><span class="line">bluetoothAdapter = bluetoothManager.getAdapter();</span><br></pre></td></tr></table></figure>
+<p><strong>BluetoothAdapter</strong>提供诸多方法来进行蓝牙操作，如调用 <strong>isEnabled()</strong> 检查当前是否已启用蓝牙。<br>调用 <strong>enable()</strong> 开启蓝牙的方法已被弃用，现在的请求启用蓝牙做法如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Intent enableBtIntent = <span class="keyword">new</span> Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);</span><br><span class="line">startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);</span><br></pre></td></tr></table></figure>
+<p>该操作将显示对话框，请求用户允许启用蓝牙，用户的响应可在onActivityResult()得到。<br>其他的广播Intent字段还有ACTION_STATE_CHANGED，当蓝牙状态发送改变，系统会广播此Intent，通过该Intent的额外字段来获取蓝牙的状态。<br>利用<strong>BluetoothAdapter</strong>可通过设备来查找远程蓝牙设备。这是一个扫描过程，开启扫描后设备会搜索局部内已启用蓝牙功能的其他设备，并请求与每台设备相关的某些信息，只有在当下接受信息请求时，附近区域的蓝牙设备才会通过启用可检测性响应发现请求。<br>如果设备已启用可检测性，它会通过共享一些信息（例如设备的名称、类及其唯一的 MAC 地址）来响应发现请求。借助此类信息，执行发现过程的设备可选择发起对已检测到设备的连接。在首次与远程设备建立连接后，系统会自动向用户显示配对请求。<br>当设备完成配对后，系统会保存关于该设备的基本信息（例如设备的名称、类和 MAC 地址），并且可使用 Bluetooth API 读取这些信息。<br>借助远程设备的已知 MAC 地址，您可以随时向其发起连接，而无需执行发现操作（假定该设备仍处于有效范围内）。其中配对是指两台设备知晓彼此的存在，共享链路密钥，能够建立加密连接。而连接是指设备当前共享一个 RFCOMM 通道，并且能够向彼此传输数据。即配对是连接的前提。  </p>
+<h4 id="启用可检测性"><a href="#启用可检测性" class="headerlink" title="启用可检测性"></a>启用可检测性</h4><p>Android设备默认处于不可被检测的状态，用户可以通过系统设置来将设备设置为在有限时间处于可被检测状态，开发者也能够请求用户启用可检测性。<br>具体做法如下： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent discoverableIntent = <span class="keyword">new</span> Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);</span><br><span class="line">discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, <span class="number">10</span>);</span><br><span class="line">startActivityForResult(discoverableIntent,REQUEST_DISCOVERABLE);</span><br></pre></td></tr></table></figure>
+<p>如果您希望将本地设备设为可被其他设备检测到，请使用 ACTION_REQUEST_DISCOVERABLE 操作 Intent 调用 startActivityForResult(Intent, int)。<br>这将通过系统设置发出启用可检测到模式的请求（无需停止您的应用）。<br>默认情况下，设备将变为可检测到并持续 120 秒钟。<br>您可以通过添加EXTRA_DISCOVERABLE_DURATION Intent Extra 来定义不同的持续时间。<br>应用可以设置的最大持续时间为 3600 秒，值为 0 则表示设备始终可检测到。 任何小于 0 或大于 3600 的值都会自动设为 120 秒。</p>
+<h4 id="发现设备"><a href="#发现设备" class="headerlink" title="发现设备"></a>发现设备</h4><p>要开始发现设备，只需调用startDiscovery()，该方法为异步，且会返回一个布尔值，表示是否已成功启动发现操作。<br>应用必须针对ACTION_FOUND Intent注册一个BroadcastReceiver，以便接受每台发现的设备信息。Intent 将携带额外字段 EXTRA_DEVICE 和 EXTRA_CLASS，二者分别包含 BluetoothDevice 和 BluetoothClass。<br>注意：执行设备发现对于蓝牙适配器而言是一个非常繁重的操作过程，并且会消耗大量资源。<br>在找到要连接的设备后，确保始终使用cancelDiscovery() 停止发现，然后再尝试连接。不应该在处于连接状态时执行发现操作。 </p>
+<h3 id="2-3-3-BluetoothDevice"><a href="#2-3-3-BluetoothDevice" class="headerlink" title="2.3.3 BluetoothDevice"></a>2.3.3 BluetoothDevice</h3><p>该类代表一个远程蓝牙设备，使用这个来请求一个与远程设备的BluetoothSocket连接，或者查询关于设备名称、地址、类和连接状态等设备信息。我们可以通过获取到的适配器来创建蓝牙设备，若已知MAC地址可通过以下方法来创建：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BluetoothDevice device = bluetoothAdapter.getRemoteDevice(MAC);</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-3-4-设备连接"><a href="#2-3-4-设备连接" class="headerlink" title="2.3.4 设备连接"></a>2.3.4 设备连接</h3><p>在两台设备之间建立连接，需要有一台设备作为服务器端，保持开放的服务器套接字来侦听传入的连接请求，即BluetoothServerSocket。<br>另一台作为客户端，使用服务端的MAC地址发起连接。<br>在打开与服务器相连的 RFCOMM 通道时，客户端会提供套接字信息，即从BluetoothServerSocket获取BluetoothSocket。<br>当服务器和客户端在同一 RFCOMM 通道上分别拥有已连接的 BluetoothSocket 时，即可将二者视为彼此连接。  </p>
+<ul>
+<li><h4 id="BluetoothSocket-客户端"><a href="#BluetoothSocket-客户端" class="headerlink" title="BluetoothSocket(客户端)"></a>BluetoothSocket(客户端)</h4><p>在客户端上，BluetoothSocket代表一个蓝牙socket的接口（和TCP Socket类似）。这是一个连接点，它允许一个应用与其他蓝牙设备通过InputStream和OutputStream交换数据。<br>最常用的蓝牙socket就是Android API所支持的RFCOMM，它是一个为蓝牙提供定向连接、数据流传输的通道。<br>我们可以通过BluetoothDevice类的方法createRfcommSocketToServiceRecord(UUID)来创建一个BluetoothSocket，然后调用connect()连接远程设备。<br>连接后通过getInputStream()和getOutputStream()来打开IO数据流准备进行数据交互。<br>当不使用socket的时候应该调用close()来关闭通道。<br>建立连接的示例代码如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">connect</span><span class="params">(BluetoothDevice device)</span></span>&#123;</span><br><span class="line">    bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">//建立RFCOMM Socket通道</span></span><br><span class="line">        bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);</span><br><span class="line">        <span class="keyword">if</span> (!bluetoothSocket.isConnected())&#123;</span><br><span class="line">            bluetoothAdapter.cancelDiscovery();</span><br><span class="line">            bluetoothSocket.connect();</span><br><span class="line">            inputStream = bluetoothSocket.getInputStream();</span><br><span class="line">            outputStream = bluetoothSocket.getOutputStream();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">catch</span> (IOException e)&#123;</span><br><span class="line">        bluetoothSocket.close();</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 BluetoothDevice，通过调用 createRfcommSocketToServiceRecord(UUID) 获取 BluetoothSocket。（这里的UUID必须与服务端的保持一致）<br>通过调用 connect() 发起连接。<br>注：在调用 connect() 时，应始终确保设备未在执行设备发现。 如果正在进行发现操作，则会大幅降低连接尝试的速度，并增加连接失败的可能性。因此，在进行连接之前必须调用cancelDiscovery()来关闭查找设备。</p>
+</li>
+<li><h4 id="BluetoothServerSocket-服务器端"><a href="#BluetoothServerSocket-服务器端" class="headerlink" title="BluetoothServerSocket(服务器端)"></a>BluetoothServerSocket(服务器端)</h4><p>在服务器端，BluetoothServerSocket代表一个开放的服务端socket，它监听接受的请求（与TCP ServerSocket类似）。为了连接两台Android设备，一个设备必须使用这个类开启一个服务器socket。当一个远程蓝牙设备开始一个和该设备的连接请求，BluetoothServerSocket将会返回一个已连接的BluetoothSocket，接受该连接。<br>建立连接的示例代码如下:  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">AcceptThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BluetoothServerSocket mmServerSocket;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AcceptThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        BluetoothServerSocket tmp = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME,MY_UUID);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        mmServerSocket = tmp;</span><br><span class="line">        mState = STATE_LISTEN;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        BluetoothSocket socket = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">while</span> (mState != STATE_CONNECTED) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                socket = mmServerSocket.accept();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (socket != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">synchronized</span> (BluetoothService.<span class="keyword">this</span>) &#123;</span><br><span class="line">                    <span class="keyword">switch</span> (mState) &#123;</span><br><span class="line">                        <span class="keyword">case</span> STATE_LISTEN:</span><br><span class="line">                        <span class="keyword">case</span> STATE_CONNECTING:</span><br><span class="line">                            connected(socket, socket.getRemoteDevice());</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> STATE_NONE:</span><br><span class="line">                        <span class="keyword">case</span> STATE_CONNECTED:</span><br><span class="line">                            <span class="keyword">try</span> &#123;</span><br><span class="line">                                socket.close();</span><br><span class="line">                            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                                e.printStackTrace();</span><br><span class="line">                            &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                mmServerSocket.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol>
+<li>通过调用 listenUsingRfcommWithServiceRecord(String, UUID) 获取 BluetoothServerSocket。  </li>
+<li>通过调用 accept() 开始侦听连接请求。  </li>
+<li>如果不想让更多的设备连接，则在连接后调用close()关闭。  </li>
+</ol>
+<p>注意：MY_UUID必须与客服端连接时的UUID一致。<br>调用accept()方法是一个阻塞调用，需要新开一个线程。</p>
+<h3 id="2-3-5-传输数据"><a href="#2-3-5-传输数据" class="headerlink" title="2.3.5 传输数据"></a>2.3.5 传输数据</h3><p>在配对结束后可以进行通信及数据的传输了。<br>首先我们要通过得到的BluetoothSocket来获取InputStream和OutputStream。</p>
+<ul>
+<li>写数据<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">byte</span>[] data)</span></span>&#123;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        outputStream.write(data);</span><br><span class="line">    &#125;<span class="keyword">catch</span>(IOException e)&#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>读数据<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">int</span> bytes;</span><br><span class="line"><span class="keyword">while</span>(mState == STATE_CONNECTED)&#123;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        bytes = inputStream.read(buffer);</span><br><span class="line">    &#125;<span class="keyword">catch</span>(IOException e)&#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="3-BLE"><a href="#3-BLE" class="headerlink" title="3.BLE"></a>3.BLE</h1>BLE即低功耗蓝牙(Bluetooth Low Energy)，在蓝牙4.0版本后引入，LE型蓝牙使用点对点（一对一）、广播（一对多）和网格（多对多）等多种网络拓扑结构。<br>Android在4.3后开始引入BLE相关的API，使得应用程序能够通过这一套API扫描蓝牙设备、查询服务、读写设备属性等操作。<br>与传统蓝牙不同的是，BLE旨在提供显著降低的功耗，这使 Android 应用可与功率要求更严格的 BLE 设备（例如近程传感器、心率监测仪和健身设备）通信。  <h2 id="3-1-BLE相关概念"><a href="#3-1-BLE相关概念" class="headerlink" title="3.1 BLE相关概念"></a>3.1 BLE相关概念</h2></li>
+<li><h3 id="GATT"><a href="#GATT" class="headerlink" title="GATT"></a>GATT</h3></li>
+</ul>
+<p><strong>通用属性配置文件</strong>：GATT 配置文件是一种通用规范，内容针对在 BLE 链路上发送和接收称为“属性”的简短数据片段。</p>
+<ul>
+<li><h3 id="ATT"><a href="#ATT" class="headerlink" title="ATT"></a>ATT</h3></li>
+</ul>
+<p><strong>属性协议</strong>：ATT是GATT的构建基础</p>
+<p>实际上GATT和ATT也可用于BR/EDR，LE型蓝牙需要它来搜寻服务，因此必不可少。<br>GATT定义了三个概念：  </p>
+<ul>
+<li><h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3></li>
+</ul>
+<p><strong>服务</strong>：服务是一系列特征。例如，您可能拥有名为“心率监测器”的服务，其中包括“心率测量”等特征。一个蓝牙设备可以定义许多Service，Service可理解为一个功能的集合，每个Service都有一个128位的UUID作为标志。蓝牙技术联盟定义UUID公用一个基本UUID：0x0000xxxx-0000-1000-8000-00805F9B34FB。<br>为了进一步简化，还有一种定义是每个属性有一个唯一的16位ID，即代替基本UUID的“x”部分。  </p>
+<ul>
+<li><h3 id="Characteristic"><a href="#Characteristic" class="headerlink" title="Characteristic"></a>Characteristic</h3></li>
+</ul>
+<p><strong>特征</strong>：Service以下又包括了各个独立数据项，这些数据项称为Characteristic，每个数据项也有一个唯一的UUID标识符。特征包含一个值和 0 至多个描述特征值的描述符。我们说的通过蓝牙发送数据给外围设备就是往这些 Characteristic 中的 Value 字段写入数据；外围设备发送数据给手机就是监听这些 Charateristic 中的 Value 字段有没有变化，如果发生了变化，手机的 BLE API 就会收到一个监听的回调。  </p>
+<ul>
+<li><h3 id="Descriptor"><a href="#Descriptor" class="headerlink" title="Descriptor"></a>Descriptor</h3>描述符是描述特征值的已定义属性。例如，描述符可指定人类可读的描述、特征值的可接受范围或特定于特征值的度量单位。 </li>
+</ul>
+<p>总结：  一个 Service 包含若干个 Characteristic，一个 Characteristic 包含若干 Descriptor。Characteristic 定义了数值和操作。把若干个相关的 Service 组合在一起，就成为了一个 Profile。</p>
+<!-- 
+## 3.2 BLE协议栈
+实现某个协议的代码成为协议栈(protocol stack)，那我们就要讨论时线BLE协议的代码，在了解代码之前还得先看看大体架构:  
+- 物理层(Physical layer)，指定BLE所用无线频段，调制解调方式和方法等。   
+- 链路层(Link Layer)，为BLE协议栈的核心，该层关心数据的传输本身，所处理的事情很多。 用于控制设备的射频状态，设备将处于五种状态之一：等待、广告、扫描、初始化、连接。广播设备不需要建立连接就可以发送数据，而扫描设备接收广播设备发送的数据；发起连接的设备通过发送连接请求来回应广播设备，如果广播设备接受连接请求，那么广播设备与发起连接的设备将会进入连接状态。发起连接的设备称为主机，接受连接请求的设备称为从机。
+
+- HCI(Host controller interface)主要用于2颗芯片实现BLE协议栈的场合，用来规范两者之间的通信协议和通信命令等。  
+- GAP层(Generic access profile)，GAP是对链路层的有效数据包进行解析的两种方式的一种，且是最简单的一种。GAP目前主要用来进行广播、扫描和发起连接等。  
+- L2CAP层(Logic link control and adaptation protocol)，该层对链路层进行了一次简单封装，要做的是区分是加密通道还算普通通道，同时还要对连接间隔进行管理。    
+- SMP层(Secure manager protocol)，用来管理连接的安全性，又同时不影响用户的体验。  
+- ATT层(Attribute protocol)，用来定义用户命令及命令操作的数据，比如读取某个数据或者写某个数据。  
+- GATT层(Generic attribute profile)，用来规范Attribute中的数据内容，用分组的概念来对它们进行分类管理。 -->
+
+<h2 id="3-3-Android上的BLE"><a href="#3-3-Android上的BLE" class="headerlink" title="3.3 Android上的BLE"></a>3.3 Android上的BLE</h2><p>在使用该功能时先声明相关权限，与传统蓝牙一样，需要借助BluetoothAdapter，这里不再累述。将BluetoothDevice取而代之的是BluetoothGatt，即设备的Gatt服务，面向服务编程。</p>
+<ul>
+<li><h3 id="BLE设备扫描"><a href="#BLE设备扫描" class="headerlink" title="BLE设备扫描"></a>BLE设备扫描</h3></li>
+</ul>
+<p><strong>API 21以前</strong><br>扫描操作由BluetoothAdapter类提供实现方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">startLeScan</span><span class="params">(BluetoothAdapter.LeScanCallback callback)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">startLeScan</span><span class="params">(UUID[] serviceUuids, BluetoothAdapter.LeScanCallback callback)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>以上方法需传入蓝牙适配器类所提供的回调对象()，也可以指定扫描设备的UUID。<br>回调接口如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LeScanCallback</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Callback reporting an LE device found during a device scan initiated</span></span><br><span class="line"><span class="comment">    * by the &#123;<span class="doctag">@link</span> BluetoothAdapter#startLeScan&#125; function.</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> device Identifies the remote device</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> rssi The RSSI value for the remote device as reported by the</span></span><br><span class="line"><span class="comment">    *             Bluetooth hardware. 0 if no RSSI value is available.</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> scanRecord The content of the advertisement record offered by</span></span><br><span class="line"><span class="comment">    *                   the remote device.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLeScan</span><span class="params">(BluetoothDevice device, <span class="keyword">int</span> rssi, <span class="keyword">byte</span>[] scanRecord)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="API-21以后"><a href="#API-21以后" class="headerlink" title="API 21以后"></a>API 21以后</h4><p>在API 21及以上，官方弃用了BluetoothAdapter的startLeScan和stopLeScan。<br>而是新引入了BluetoothLeScanner类(被单独封装为一个新类)和ScanCallback回调接口。<br>对应的BluetoothLeScanner对象由蓝牙适配器的方法 <strong>getBluetoothLeScanner()</strong> 获得。<br>扫描接口如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">BluetoothLeScanner</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startScan</span><span class="params">(ScanCallback callback)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startScan</span><span class="params">(List&lt;ScanFilter&gt; filters, ScanSettings settings, ScanCallback callback)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">startScan</span><span class="params">(@Nullable List&lt;ScanFilter&gt; filters, @Nullable ScanSettings settings, @NonNull PendingIntent callbackIntent)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stopScan</span><span class="params">(ScanCallback callback)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stopScan</span><span class="params">(PendingIntent callbackIntent)</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>若开始扫描操作后而没有传入过滤条件，扫描动作将在设备屏幕关闭后停止以节省能源，若设备屏幕唤醒则继续进行扫描，毕竟扫描操作是一个较耗电的过程。<br>ScanFilter可限制扫描结果为我们只关心的结果，过滤条件包括服务的UUID、远程设备名称、远程设备的Mac地址等。<br>ScanSettings则是扫描参数设置，例如设置扫描动作是以节能为优还是以效率为优，相比原来的API有了更加细化的操作。<br>扫描回调接口如下： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ScanCallback</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScanResult</span><span class="params">(<span class="keyword">int</span> callbackType,ScanResult result)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBatchScanResults</span><span class="params">(List&lt;ScanResult&gt; results)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScanFailed</span><span class="params">(<span class="keyword">int</span> errorCode)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ScanResult是对扫描结果的封装，可通过getDevice()来获取远程设备对象。</p>
+<ul>
+<li><h3 id="连接BLE设备的GATT服务"><a href="#连接BLE设备的GATT服务" class="headerlink" title="连接BLE设备的GATT服务"></a>连接BLE设备的GATT服务</h3>要在BLE设备上连接到GATT服务可使用由BluetoothDevice类提供的实现方法：  </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> BluetoothGatt <span class="title">connectGatt</span><span class="params">(Context context, </span></span></span><br><span class="line"><span class="function"><span class="params">            <span class="keyword">boolean</span> autoConnect, </span></span></span><br><span class="line"><span class="function"><span class="params">            BluetoothGattCallback callback)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>其中第二个参数表示是否在BLE设备可用时自动连接到该设备。连接到由BLE设备托管的GATT服务后，返回一个BluetoothGatt实例，由这个实例就能够执行客户端操作。其中GATT变化时通过BluetoothGattCallback类回调，第三个参数为Gatt服务回调的引用，需要自行实现该抽象类。  </p>
+<ul>
+<li><h3 id="GATT服务回调"><a href="#GATT服务回调" class="headerlink" title="GATT服务回调"></a>GATT服务回调</h3>BluetoothGattCallback类提供的接口如下：  </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BluetoothGattCallback</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onConnectionStateChange</span><span class="params">(BluetoothGatt gatt, <span class="keyword">int</span> status, <span class="keyword">int</span> newState)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServicesDiscovered</span><span class="params">(BluetoothGatt gatt, <span class="keyword">int</span> status)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCharacteristicChanged</span><span class="params">(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCharacteristicRead</span><span class="params">(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, <span class="keyword">int</span> status)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCharacteristicWrite</span><span class="params">(BluetoothGatt gatt,BluetoothGattCharacteristic characteristic,<span class="keyword">int</span> status)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>onConnectionStateChange</strong><br>当连接状态发生改变时将调用此接口，newstate即为当前服务的连接状态，可在此方法实现自己的业务逻辑，例如发送自定义广播来监听此事件。  </p>
+</li>
+<li><p><strong>onServicesDiscovered</strong><br>发现设备服务时回调此接口，status为该服务的订阅状态，若订阅成功需要在此方法处理订阅事件。<br>我们可获取BLE设备的所有GATT服务，而后获取每个服务的特征特性，并保存下来。<br>若是需要与某个特定服务中的特定属性进行数据读写则需要筛选服务的UUID和特征的UUID。<br>在找到想要订阅的特性后，我们希望它在改变时能够得到通知，则需要调用BluetoothGatt提供的方法： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">setCharacteristicNotification</span><span class="params">(BluetoothGattCharacteristic characteristic, <span class="keyword">boolean</span> enable)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>开启通知后才能在以下接口产生回调，即订阅了该服务特征。</p>
+</li>
+<li><p><strong>onCharacteristicChanged</strong><br>监听GATT服务及服务特性的数据变化(即接受到消息时回调)。</p>
+</li>
+<li><p><strong>onCharacteristicRead</strong><br>在读取特征属性时结果回调在此接口，读取特征属性调用BluetoothGatt类所提供的方法：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">readCharacteristic</span><span class="params">(BluetoothGattCharacteristic characteristic)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>onCharacteristicWrite</strong><br>在向BLE设备发送数据时回调在此接口，发送数据调用BluetoothGatt类所提供的方法：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">writeCharacteristic</span><span class="params">(BluetoothGattCharacteristic characteristic)</span></span>;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>更详细的信息移步<a href="https://developer.android.com/guide/topics/connectivity/bluetooth">Android开发者官网</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Android/" rel="tag">Android</a>, <a class="has-link-grey -link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a>, <a class="has-link-grey -link" href="/tags/%E8%93%9D%E7%89%99/" rel="tag">蓝牙</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/alipay-qrcode.jpg" alt="支付宝"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/12/28/Netty%E5%85%A5%E9%97%A8%E4%B9%8B%E6%89%93%E9%80%A0%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84RPC%E6%A1%86%E6%9E%B6/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Netty入门之打造一个简易的RPC框架</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/06/17/Android%20JNI%E5%85%A5%E9%97%A8/">
+                <span class="level-item">Android JNI入门</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="/images/avatar.png" alt="Weikun">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Weikun
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Android Devloper
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>China,Fujian</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            5
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            1
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            6
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/MyDearEsther" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/MyDearEsther">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Facebook" href="https://www.facebook.com/ezio.lin.752">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Twitter" href="https://twitter.com/568054764">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://google.com" target="_blank" rel="noopener">
+                    <span class="level-left">
+                        <span class="level-item">Google</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">google.com</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://stackoverflow.com/" target="_blank" rel="noopener">
+                    <span class="level-left">
+                        <span class="level-item">StackOverFlow</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">stackoverflow.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/%E6%8A%80%E6%9C%AF/">
+            <span class="level-start">
+                <span class="level-item">技术</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/12/28/Netty%E5%85%A5%E9%97%A8%E4%B9%8B%E6%89%93%E9%80%A0%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84RPC%E6%A1%86%E6%9E%B6/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Netty入门之打造一个简易的RPC框架">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-28T14:00:00.000Z">2019-12-28</time></div>
+                    <a href="/2019/12/28/Netty%E5%85%A5%E9%97%A8%E4%B9%8B%E6%89%93%E9%80%A0%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84RPC%E6%A1%86%E6%9E%B6/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Netty入门之打造一个简易的RPC框架</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/23/Android%20Bluetooth%E6%95%B4%E7%90%86/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Android Bluetooth整理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-23T09:30:00.000Z">2019-12-23</time></div>
+                    <a href="/2019/12/23/Android%20Bluetooth%E6%95%B4%E7%90%86/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Android Bluetooth整理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/17/Android%20JNI%E5%85%A5%E9%97%A8/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Android JNI入门">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-17T06:00:00.000Z">2019-06-17</time></div>
+                    <a href="/2019/06/17/Android%20JNI%E5%85%A5%E9%97%A8/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Android JNI入门</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/04/05/%E5%85%B3%E4%BA%8EJava%E9%94%81%E7%9A%84%E6%95%B4%E7%90%86/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="关于Java锁的整理(持续更新)">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-04-05T15:00:00.000Z">2019-04-05</time></div>
+                    <a href="/2019/04/05/%E5%85%B3%E4%BA%8EJava%E9%94%81%E7%9A%84%E6%95%B4%E7%90%86/" class="title has-link-black-ter is-size-6 has-text-weight-normal">关于Java锁的整理(持续更新)</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/1996/12/31/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%B5%8B%E8%AF%95/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="第一篇测试">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="1996-12-30T16:00:00.000Z">1996-12-31</time></div>
+                    <a href="/1996/12/31/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%B5%8B%E8%AF%95/" class="title has-link-black-ter is-size-6 has-text-weight-normal">第一篇测试</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Netty/" style="font-size: 10px;">Netty</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 20px;">技术</a> <a href="/tags/%E8%93%9D%E7%89%99/" style="font-size: 10px;">蓝牙</a>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/1996/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 1996</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Android/">
+                        <span class="tag">Android</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JNI/">
+                        <span class="tag">JNI</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Java/">
+                        <span class="tag">Java</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Netty/">
+                        <span class="tag">Netty</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%E6%8A%80%E6%9C%AF/">
+                        <span class="tag">技术</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%E8%93%9D%E7%89%99/">
+                        <span class="tag">蓝牙</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Netty/" style="font-size: 10px;">Netty</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 20px;">技术</a> <a href="/tags/%E8%93%9D%E7%89%99/" style="font-size: 10px;">蓝牙</a>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/1996/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 1996</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Android/">
+                        <span class="tag">Android</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JNI/">
+                        <span class="tag">JNI</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Java/">
+                        <span class="tag">Java</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Netty/">
+                        <span class="tag">Netty</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%E6%8A%80%E6%9C%AF/">
+                        <span class="tag">技术</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%E8%93%9D%E7%89%99/">
+                        <span class="tag">蓝牙</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Android Bluetooth整理" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 Weikun&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://mydearesther.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
