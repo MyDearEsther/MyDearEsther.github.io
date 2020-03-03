@@ -20,7 +20,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://mydearesther.github.io/images/og_image.png">
 <meta property="article:published_time" content="2019-06-17T06:00:00.000Z">
-<meta property="article:modified_time" content="2020-03-03T16:23:31.934Z">
+<meta property="article:modified_time" content="2020-03-03T16:44:42.871Z">
 <meta property="article:author" content="Weikun">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="Android">
@@ -148,7 +148,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 分钟 读完 (大约 908 个字)
+                    8 分钟 读完 (大约 1187 个字)
                 </span>
                 
                 
@@ -177,8 +177,8 @@
 
 <p>CMake 按照构建脚本中的命令将 C++ 指定的源文件编译到共享的对象库中，并命名为自定义的so库，Gradle随后会将其打包到APK中。</p>
 <h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><p>在本地方法类中使用System.loadLibrary(“libJniTest.so”)加载自己编写并编译好的原生库。   </p>
-<h2 id="JNI注册本地方法："><a href="#JNI注册本地方法：" class="headerlink" title="JNI注册本地方法："></a>JNI注册本地方法：</h2><pre><code>Java_包名_类名_方法名
-Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="#1-传统方式" class="headerlink" title="1. 传统方式"></a>1. 传统方式</h3><p>通过命令javah生成java类对应的c头文件。<br>设置流程：Android Studio - &gt; File - &gt; Settings - &gt; Tools - &gt; External Tools， 新增名为javah的工具。<br>设置如下：    </p>
+<h2 id="JNI注册本地方法"><a href="#JNI注册本地方法" class="headerlink" title="JNI注册本地方法"></a>JNI注册本地方法</h2><p>JNI中的方法例如：<br>    Java_包名_类名_方法名<br>    Java_com_kun_Tes_JniTest_FunctionA<br>则在JniTest类中的方法映射为FunctionA()。<br>也可通过如下方式来生成本地方法： </p>
+<h3 id="1-命令生成"><a href="#1-命令生成" class="headerlink" title="1. 命令生成"></a>1. 命令生成</h3><p>通过命令javah生成java类对应的c头文件。<br>设置流程：Android Studio - &gt; File - &gt; Settings - &gt; Tools - &gt; External Tools， 新增名为javah的工具。<br>设置如下：    </p>
 <table>
 <thead>
 <tr>
@@ -199,12 +199,17 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
 <td>$ModuleFileDir$\ src\ main</td>
 </tr>
 </tbody></table>
-<h3 id="2-动态注册函数"><a href="#2-动态注册函数" class="headerlink" title="2. 动态注册函数"></a>2. 动态注册函数</h3><p>应用层在加载so文件时， 虚拟机会首先执行JNI_OnLoad(…)。<br>JNI_OnLoad方法如下： </p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">JNIEXPORT jint JNICALL <span class="title">JNI_OnLoad</span><span class="params">(JavaVM * vm, <span class="keyword">void</span> * reserved)</span> </span>&#123;</span><br><span class="line">    JNIEnv * env = <span class="literal">NULL</span>; <span class="comment">//注册时在JNIEnv中实现的，所以必须首先获取它</span></span><br><span class="line">    jint result = JNI_ERR;</span><br><span class="line">    sVm = vm;</span><br><span class="line">    <span class="keyword">if</span> (vm - &gt; GetEnv((<span class="keyword">void</span> ** ) &amp; env, JNI_VERSION_1_4) != JNI_OK) <span class="comment">//从JavaVM获取JNIEnv，一般使用1.4的版本</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (jniRegisterNativeMethods(env, JAVA_CLASS_NAME, method_table, NELEM(method_table)) == JNI_OK) &#123;</span><br><span class="line">        result = JNI_VERSION_1_4; <span class="comment">////这里很重要，必须返回版本，否则加载会失败。</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-动态注册函数"><a href="#2-动态注册函数" class="headerlink" title="2. 动态注册函数"></a>2. 动态注册函数</h3><p>应用层在加载so文件时， 虚拟机会首先执行JNI_OnLoad方法。<br>我们需要重载JNI_OnLoad方法： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">JNIEXPORT jint JNICALL <span class="title">JNI_OnLoad</span><span class="params">(JavaVM * vm, <span class="keyword">void</span> * reserved)</span> </span>&#123;</span><br><span class="line">   <span class="comment">//注册时在JNIEnv中实现的，所以必须首先获取它</span></span><br><span class="line">    JNIEnv * env = <span class="literal">NULL</span>;</span><br><span class="line">    jint result = JNI_ERR;</span><br><span class="line">    sVm = vm;</span><br><span class="line">     <span class="comment">//从JavaVM获取JNIEnv，一般使用1.4的版本</span></span><br><span class="line">    <span class="keyword">if</span> (vm - &gt; GetEnv((<span class="keyword">void</span> ** ) &amp; env, JNI_VERSION_1_4) != JNI_OK) <span class="comment">//从JavaVM获取JNIEnv，一般使用1.4的版本</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//这里很重要，必须返回版本，否则加载会失败。</span></span><br><span class="line">    <span class="keyword">if</span> (jniRegisterNativeMethods(env, JAVA_CLASS_NAME, method_table, NELEM(method_table)) == JNI_OK) &#123;</span><br><span class="line">        result = JNI_VERSION_1_4; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在C/C++文件中需定义并实现对应Java中声明的本地方法， 方法名可以随意， 参数类型与参数个数要相同。 </p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">jint <span class="title">jniRegisterNativeMethods</span><span class="params">(JNIEnv * env,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="keyword">char</span> * className,</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">const</span> JNINativeMethod * gMethods,</span></span></span><br><span class="line"><span class="function"><span class="params">            <span class="keyword">int</span> numMethods)</span> </span>&#123;</span><br><span class="line">    LOGI(<span class="string">"jni onload called"</span>);</span><br><span class="line">    jclass clazz;</span><br><span class="line">    clazz = env - &gt; FindClass(className); <span class="comment">// 获取映射的java类</span></span><br><span class="line">    <span class="keyword">if</span> (clazz == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"cannot get class: "</span> &lt;&lt; className &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (env - &gt; RegisterNatives(clazz, gMethods, numMethods) &lt; <span class="number">0</span>) <span class="comment">// 通过RegisterNatives方法动态注册</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"register native method failed!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    LOGI(<span class="string">"jni onload called end..."</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h3 id="JNI中回调Java方法"><a href="#JNI中回调Java方法" class="headerlink" title="JNI中回调Java方法"></a>JNI中回调Java方法</h3><p>有时候在执行jni方法时想要回调java方法，jni.h中有提供相关api来做这件事。<br>例如Java中有一个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">int</span> arg)</span></span>&#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>JNI中的回调方式则为:  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _jniCallback(JNIEnv *env,jobject obj)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">//寻找对应的java本地方法类</span></span><br><span class="line">  jclass jSdkClass = (*env)-&gt;GetObjectClass(env,obj);</span><br><span class="line">  <span class="keyword">if</span>(jSdkClass==<span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">//找不到类，异常处理...</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//在java类中寻找一个名为"callback"的方法，第三个参数为方法名，第四个参数为方法的参数签名  </span></span><br><span class="line">  jmethodID javaCallback = (*env)-&gt;GetMethodID(env, jSdkClass,<span class="string">"callback"</span>, <span class="string">"(I)I"</span>);</span><br><span class="line">  <span class="comment">//进行回调 第三个参数及以后为方法的输入参数</span></span><br><span class="line">  jint ret = (*env)-&gt;CallIntMethod(env,obj,javaCallback,<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在jni中有多种方法来实现类似的回调，若方法为static修饰，则使用GetStaticMethodID及CallStaticIntMethod，其他类似回调大同小异，就暂不累述。  </p>
 
         </div>
         
@@ -253,9 +258,9 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/12/23/Android%20Bluetooth%E6%95%B4%E7%90%86/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/12/23/%E5%BC%80%E5%8F%91%E7%B3%BB%E7%BB%9F%E5%BC%B9%E6%A1%86%E5%BA%94%E7%94%A8%E9%9A%8F%E8%AE%B0/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Android Bluetooth整理</span>
+                <span class="level-item">开发系统弹框应用随记</span>
             </a>
         </div>
         
@@ -316,7 +321,7 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            5
+                            6
                         </p>
                     </a>
                 </div>
@@ -441,7 +446,7 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
                 <span class="level-item">技术</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">6</span>
             </span>
         </a></li>
             </ul>
@@ -495,6 +500,25 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
         
         <article class="media">
             
+            <a href="/2019/12/23/%E5%BC%80%E5%8F%91%E7%B3%BB%E7%BB%9F%E5%BC%B9%E6%A1%86%E5%BA%94%E7%94%A8%E9%9A%8F%E8%AE%B0/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="开发系统弹框应用随记">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-23T09:30:00.000Z">2019-12-23</time></div>
+                    <a href="/2019/12/23/%E5%BC%80%E5%8F%91%E7%B3%BB%E7%BB%9F%E5%BC%B9%E6%A1%86%E5%BA%94%E7%94%A8%E9%9A%8F%E8%AE%B0/" class="title has-link-black-ter is-size-6 has-text-weight-normal">开发系统弹框应用随记</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/06/17/Android%20JNI%E5%85%A5%E9%97%A8/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Android JNI入门">
@@ -531,25 +555,6 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/1996/12/31/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%B5%8B%E8%AF%95/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="第一篇测试">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="1996-12-30T16:00:00.000Z">1996-12-31</time></div>
-                    <a href="/1996/12/31/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%B5%8B%E8%AF%95/" class="title has-link-black-ter is-size-6 has-text-weight-normal">第一篇测试</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
     
@@ -561,7 +566,7 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Netty/" style="font-size: 10px;">Netty</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 20px;">技术</a> <a href="/tags/%E8%93%9D%E7%89%99/" style="font-size: 10px;">蓝牙</a>
+        <a href="/tags/Android/" style="font-size: 16.67px;">Android</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/Netty/" style="font-size: 10px;">Netty</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 20px;">技术</a> <a href="/tags/%E8%93%9D%E7%89%99/" style="font-size: 13.33px;">蓝牙</a>
     </div>
 </div>
         
@@ -579,7 +584,7 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
                     <span class="level-item">十二月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -633,7 +638,7 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Android/">
                         <span class="tag">Android</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -661,14 +666,14 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
                 <div class="control">
                     <a class="tags has-addons" href="/tags/%E6%8A%80%E6%9C%AF/">
                         <span class="tag">技术</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">6</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/%E8%93%9D%E7%89%99/">
                         <span class="tag">蓝牙</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -693,7 +698,7 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Netty/" style="font-size: 10px;">Netty</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 20px;">技术</a> <a href="/tags/%E8%93%9D%E7%89%99/" style="font-size: 10px;">蓝牙</a>
+        <a href="/tags/Android/" style="font-size: 16.67px;">Android</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/Netty/" style="font-size: 10px;">Netty</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 20px;">技术</a> <a href="/tags/%E8%93%9D%E7%89%99/" style="font-size: 13.33px;">蓝牙</a>
     </div>
 </div>
     
@@ -711,7 +716,7 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
                     <span class="level-item">十二月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -765,7 +770,7 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Android/">
                         <span class="tag">Android</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -793,14 +798,14 @@ Java_com_kun_Tes_JniTest_FunctionA</code></pre><h3 id="1-传统方式"><a href="
                 <div class="control">
                     <a class="tags has-addons" href="/tags/%E6%8A%80%E6%9C%AF/">
                         <span class="tag">技术</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">6</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/%E8%93%9D%E7%89%99/">
                         <span class="tag">蓝牙</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
