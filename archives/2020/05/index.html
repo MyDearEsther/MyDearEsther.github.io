@@ -8,23 +8,16 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>开发系统弹框应用随记 - Weikun</title>
+<title>归档: 2020/5 - Weikun</title>
 
 
-    <meta name="description" content="学习记录">
-<meta property="og:type" content="article">
-<meta property="og:title" content="开发系统弹框应用随记">
-<meta property="og:url" content="http://mydearesther.github.io/2019/12/23/%E5%BC%80%E5%8F%91%E7%B3%BB%E7%BB%9F%E5%BC%B9%E6%A1%86%E5%BA%94%E7%94%A8%E9%9A%8F%E8%AE%B0/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Weikun">
+<meta property="og:url" content="http://mydearesther.github.io/archives/2020/05/index.html">
 <meta property="og:site_name" content="Weikun">
-<meta property="og:description" content="学习记录">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://mydearesther.github.io/images/og_image.png">
-<meta property="article:published_time" content="2019-12-23T09:30:00.000Z">
-<meta property="article:modified_time" content="2020-07-12T15:32:47.975Z">
 <meta property="article:author" content="Weikun">
-<meta property="article:tag" content="技术">
-<meta property="article:tag" content="Android">
-<meta property="article:tag" content="蓝牙">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://mydearesther.github.io/images/og_image.png">
 
@@ -82,7 +75,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="开发系统弹框应用随记" height="28">
+                <img src="/images/logo.svg" alt="Weikun" height="28">
             
             </a>
         </div>
@@ -132,126 +125,34 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-10-tablet is-10-desktop is-8-widescreen has-order-2 column-main">
-<div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-12-23T09:30:00.000Z">2019-12-23</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    6 分钟 读完 (大约 847 个字)
-                </span>
-                
-                
-                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
-                    <i class="far fa-eye"></i>
-                    <span id="busuanzi_value_page_pv">0</span>次访问
-                </span>
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                开发系统弹框应用随记
-            
-        </h1>
-        <div class="content">
-            <p>学习记录  </p>
-<a id="more"></a>
-<h2 id="系统应用"><a href="#系统应用" class="headerlink" title="系统应用"></a>系统应用</h2><p>系统签名分四种类型：<br>testkey,platform,media,shared<br>platform需要apk所在进程的uid为system，则在manifest根节点加入 android:sharedUserId=”android.uid.system”<br>其签名文件位于Android源码目录build/target/product/security中：platform.pk8，platform.x509.pem<br>使用Android自带的签名工具signapk.jar,该文件位于源码目录out/host/linux-x86/framework/下。<br>将以上三个文件置于同一目录下，执行命令  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar signapk.jar platform.x509.pem platform.pk8 old.apk new.apk</span><br></pre></td></tr></table></figure>
-<p>即可生成带系统签名的apk (jdk版本需为1.8)  </p>
-<h2 id="Android-P-28-上的静默安装"><a href="#Android-P-28-上的静默安装" class="headerlink" title="Android P(28)上的静默安装"></a>Android P(28)上的静默安装</h2><p>首先需要在Manifest添加<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>。<br>常规的显式安装：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">intent = <span class="keyword">new</span> Intent(Intent.ACTION_VIEW);</span><br><span class="line">intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);</span><br><span class="line">intent.setDataAndType(</span><br><span class="line">        FileProvider.getUriForFile(MainActivity.<span class="keyword">this</span>,BuildConfig.APPLICATION_ID+<span class="string">".provider"</span> ,file),</span><br><span class="line">        <span class="string">"application/vnd.android.package-archive"</span>);</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
-<p>静默安装：<br>在Android N(24)之前:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Intent intent;</span><br><span class="line">intent = <span class="keyword">new</span> Intent(<span class="string">"android.intent.action.VIEW.HIDE"</span>);</span><br><span class="line">intent.setDataAndType(Uri.fromFile(file), <span class="string">"application/vnd.android.package-archive"</span>);</span><br><span class="line">intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
-<p>PM命令在Android P上已失效，转而采用文件流的方式来进行安装（比较麻烦）：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">install</span><span class="params">(Context context,File apkFile)</span> </span>&#123;</span><br><span class="line">    PackageInstaller packageInstaller = context.getPackageManager().getPackageInstaller();</span><br><span class="line">    PackageInstaller.SessionParams sessionParams</span><br><span class="line">            = <span class="keyword">new</span> PackageInstaller.SessionParams(PackageInstaller</span><br><span class="line">            .SessionParams.MODE_FULL_INSTALL);</span><br><span class="line">    sessionParams.setSize(apkFile.length());</span><br><span class="line">    <span class="keyword">int</span> sessionId = createSession(packageInstaller, sessionParams);</span><br><span class="line">    <span class="keyword">if</span> (sessionId != -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">boolean</span> copySuccess = copyInstallFile(packageInstaller, sessionId, apkFile);</span><br><span class="line">        <span class="keyword">if</span> (copySuccess) &#123;</span><br><span class="line">            execInstallCommand(context,packageInstaller, sessionId));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">createSession</span><span class="params">(PackageInstaller packageInstaller,</span></span></span><br><span class="line"><span class="function"><span class="params">                          PackageInstaller.SessionParams sessionParams)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sessionId = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        sessionId = packageInstaller.createSession(sessionParams);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sessionId;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">copyInstallFile</span><span class="params">(PackageInstaller packageInstaller,</span></span></span><br><span class="line"><span class="function"><span class="params">                                <span class="keyword">int</span> sessionId, File apkFile)</span> </span>&#123;</span><br><span class="line">    InputStream in = <span class="keyword">null</span>;</span><br><span class="line">    OutputStream out = <span class="keyword">null</span>;</span><br><span class="line">    PackageInstaller.Session session = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">boolean</span> success = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        session = packageInstaller.openSession(sessionId);</span><br><span class="line">        out = session.openWrite(<span class="string">"base.apk"</span>, <span class="number">0</span>, apkFile.length());</span><br><span class="line">        in = <span class="keyword">new</span> FileInputStream(apkFile);</span><br><span class="line">        <span class="keyword">int</span> total = <span class="number">0</span>, c;</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">65536</span>];</span><br><span class="line">        <span class="keyword">while</span> ((c = in.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">            total += c;</span><br><span class="line">            out.write(buffer, <span class="number">0</span>, c);</span><br><span class="line">        &#125;</span><br><span class="line">        session.fsync(out);</span><br><span class="line">        Log.i(TAG, <span class="string">"streamed "</span> + total + <span class="string">" bytes"</span>);</span><br><span class="line">        success = <span class="keyword">true</span>;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        IOUtils.closeQuietly(out);</span><br><span class="line">        IOUtils.closeQuietly(in);</span><br><span class="line">        IOUtils.closeQuietly(session);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> success;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">execInstallCommand</span><span class="params">(Context context,PackageInstaller packageInstaller, <span class="keyword">int</span> sessionId)</span> </span>&#123;</span><br><span class="line">    PackageInstaller.Session session = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        session = packageInstaller.openSession(sessionId);</span><br><span class="line">        Intent intent = <span class="keyword">new</span> Intent(context, InstallResultReceiver<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,</span><br><span class="line">                <span class="number">1</span>, intent,</span><br><span class="line">                PendingIntent.FLAG_UPDATE_CURRENT);</span><br><span class="line">        session.commit(pendingIntent.getIntentSender());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        IOUtils.closeQuietly(session);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>安装回调（广播接收）:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InstallResultReceiver</span> <span class="keyword">extends</span> <span class="title">BroadcastReceiver</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = InstallResultReceiver<span class="class">.<span class="keyword">class</span>.<span class="title">getSimpleName</span>()</span>;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(Context context, Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (intent != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS,</span><br><span class="line">                    PackageInstaller.STATUS_FAILURE);</span><br><span class="line">            <span class="keyword">if</span> (status == PackageInstaller.STATUS_SUCCESS) &#123;</span><br><span class="line">                <span class="comment">//安装成功</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//安装失败</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="屏蔽状态栏下拉"><a href="#屏蔽状态栏下拉" class="headerlink" title="屏蔽状态栏下拉"></a>屏蔽状态栏下拉</h2><p>StatusBarManager类及其方法被标记为@Hide，需要通过反射方法来实现。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 禁止/恢复 状态栏下拉</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> mContext 应用上下文</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> disable 是否禁止</span></span><br><span class="line"><span class="comment">     禁止 0x00010000</span></span><br><span class="line"><span class="comment">     恢复 0x00000000</span></span><br><span class="line"><span class="comment">     * */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">disableStatusBar</span><span class="params">(Context mContext,<span class="keyword">boolean</span> disable)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Object service = mContext.getSystemService(<span class="string">"statusbar"</span>);</span><br><span class="line">            Class&lt;?&gt; clz = getClass(<span class="string">"android.app.StatusBarManager"</span>);</span><br><span class="line">            <span class="keyword">if</span> (clz!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                Method method = clz.getMethod(<span class="string">"disable"</span>, <span class="keyword">int</span><span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">                method.invoke(service, disable ? <span class="number">0x00010000</span> : <span class="number">0x00000000</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>其他类似需要反射的系统类如 android.os.SystemProperties,通过getMethod获取get和set方法来获取设置系统属性。</p>
-<h2 id="禁止导航栏"><a href="#禁止导航栏" class="headerlink" title="禁止导航栏"></a>禁止导航栏</h2><p>屏蔽导航按键：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * HOME键屏蔽位</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_HOMEKSY_DISPATCHED = <span class="number">0x80000000</span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 屏蔽任务键</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STATUS_BAR_DISABLE_RECENT = <span class="number">0x01000000</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 屏蔽导航按键</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">disableNavigationBar</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (dialog.getWindow() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        dialog.getWindow().setFlags(FLAG_HOMEKSY_DISPATCHED, FLAG_HOMEKSY_DISPATCHED);</span><br><span class="line">        dialog.getWindow().setFlags(STATUS_BAR_DISABLE_RECENT, STATUS_BAR_DISABLE_RECENT);</span><br><span class="line">        dialog.getWindow().addFlags(<span class="number">3</span>);</span><br><span class="line">        dialog.getWindow().addFlags(<span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>隐藏底部导航:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 显示/隐藏 底部导航</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setNavigationBarVisibility</span><span class="params">(<span class="keyword">boolean</span> visible)</span> </span>&#123;</span><br><span class="line">        View decorView;</span><br><span class="line">        <span class="keyword">if</span> (dialog.getWindow() != <span class="keyword">null</span>) &#123;</span><br><span class="line">            decorView = dialog.getWindow().getDecorView();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!visible) &#123;</span><br><span class="line">            <span class="keyword">int</span> uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |</span><br><span class="line">                    View.SYSTEM_UI_FLAG_FULLSCREEN |</span><br><span class="line">                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |</span><br><span class="line">                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |</span><br><span class="line">                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |</span><br><span class="line">                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;</span><br><span class="line">            decorView.setSystemUiVisibility(uiOptions);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">int</span> uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;</span><br><span class="line">            decorView.setSystemUiVisibility(uiOptions);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-        </div>
-        
-        <div class="level is-size-7 is-uppercase">
-            <div class="level-start">
-                <div class="level-item">
-                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/Android/" rel="tag">Android</a>, <a class="has-link-grey -link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a>, <a class="has-link-grey -link" href="/tags/%E8%93%9D%E7%89%99/" rel="tag">蓝牙</a>
-                </div>
-            </div>
-        </div>
-        
-        
-        
-        <div class="social-share"></div>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
-<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
-        
-    </div>
-</div>
-
-
-
-<div class="card">
+<div class="card widget">
     <div class="card-content">
-        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
-        <div class="buttons is-centered">
-            
+        <h3 class="tag is-link">
+        五月 2020
+        </h3>
+        <div class="timeline">
+        
+            <article class="media">
                 
-<a class="button is-info donate">
-    <span class="icon is-small">
-        <i class="fab fa-alipay"></i>
-    </span>
-    <span>支付宝</span>
-    <div class="qrcode"><img src="/images/alipay-qrcode.jpg" alt="支付宝"></div>
-</a>
-
-                
+                <div class="media-content">
+                    <div class="content">
+                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2020-05-30T14:30:00.000Z">2020-05-30</time>
+                        <a href="/2020/05/30/LiveData/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Jetpack学习之旅 —— LiveData</a>
+                        <div class="level article-meta is-mobile">
+                            <div class="level-left">
+                                
+                                <div class="level-item is-size-7 is-uppercase">
+                                <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        
         </div>
-    </div>
-</div>
-
-
-
-<div class="card card-transparent">
-    <div class="level post-navigation is-flex-wrap is-mobile">
-        
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/12/23/Android%20Bluetooth%E6%95%B4%E7%90%86/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Android Bluetooth整理</span>
-            </a>
-        </div>
-        
-        
-        <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/06/17/Android%20JNI%E5%85%A5%E9%97%A8/">
-                <span class="level-item">Android JNI入门</span>
-                <i class="level-item fas fa-chevron-right"></i>
-            </a>
-        </div>
-        
     </div>
 </div>
 
@@ -864,7 +765,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="开发系统弹框应用随记" height="28">
+                    <img src="/images/logo.svg" alt="Weikun" height="28">
                 
                 </a>
                 <p class="is-size-7">

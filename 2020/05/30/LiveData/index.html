@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<script src="/js/src/click.js"></script>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Jetpack学习之旅 —— LiveData - Weikun</title>
+
+
+    <meta name="description" content="LiveData、ViewModel与Lifecycles是Jetpack的招牌组件，也是MVVM模式中的得力助手。本篇博文针对LiveData来谈谈实际使用体验和原理探究。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jetpack学习之旅 —— LiveData">
+<meta property="og:url" content="http://mydearesther.github.io/2020/05/30/LiveData/index.html">
+<meta property="og:site_name" content="Weikun">
+<meta property="og:description" content="LiveData、ViewModel与Lifecycles是Jetpack的招牌组件，也是MVVM模式中的得力助手。本篇博文针对LiveData来谈谈实际使用体验和原理探究。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://mydearesther.github.io/images/og_image.png">
+<meta property="article:published_time" content="2020-05-30T14:30:00.000Z">
+<meta property="article:modified_time" content="2020-07-12T15:46:21.557Z">
+<meta property="article:author" content="Weikun">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Jetpack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mydearesther.github.io/images/og_image.png">
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Jetpack学习之旅 —— LiveData" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+                <a class="navbar-item"
+                href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/MyDearEsther">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-10-tablet is-10-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-05-30T14:30:00.000Z">2020-05-30</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    29 分钟 读完 (大约 4281 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Jetpack学习之旅 —— LiveData
+            
+        </h1>
+        <div class="content">
+            <p>LiveData、ViewModel与Lifecycles是Jetpack的招牌组件，也是MVVM模式中的得力助手。<br>本篇博文针对LiveData来谈谈实际使用体验和原理探究。    </p>
+<a id="more"></a>
+<p>现在越来越多的开源项目采用MVVM + Kotlin + JetPack进行开发，本人也在自己的项目中去尝试和探索，不由感叹真香！<br>如今MVVM设计模式几乎是Android开发中最佳的选择，这种开发模式也得到了Google官方的完全支持和鼓励。<br>MVVM设计模式一般由Model、View及ViewModel组成，用户交互通过View传递至ViewModel，ViewModel监听数据的改变并传递至View，相互独立和通信。<br>LiveData经常与ViewModel来搭配使用，ViewModel将视图和逻辑进行分离，可在Activity或Fragment组件(实现了LifecyleOwner接口)中实现数据共享，而LiveData是一个方便、安全的可感知其生命周期的数据容器，LiveData与ViewModel的组合可谓双剑合璧，Lifecyles贯穿其中。   </p>
+<h1 id="1-初步认识LiveData"><a href="#1-初步认识LiveData" class="headerlink" title="1. 初步认识LiveData"></a>1. 初步认识LiveData</h1><p>LiveData是一种可观察的数据容器类，就如名字一样，它像是一个活着的数据，具有生命周期感知能力，可以绑定在LifeCycle对象上，如Activity、Fragment、Service组件。<br>在LiveData到来之前，我们一般使用EventBus或者RxJava来进行状态分发，这样很容易出现内存泄漏问题，并且需要去手动管理生命周期，在LiveData中可以规避这些问题。<br>使用LiveData来保持应用数据有如下两大优势：  </p>
+<ul>
+<li><p><strong>能够保持界面和数据的一致性，自动同步最新状态</strong><br>LiveData遵循观察者模式，当生命周期发生改变，LiveData将会通知Observer对象，开发者可在Observer对象的回调中更新界面。<br>当LifeCycle生命周期由非活跃态转变为活跃态时，LiveData会接收最新的数据，例如，在后台的Activity在返回前台后与之关联的LiveData立即接收最新的数据。<br>如果由于配置更改而重新创建了Activity或Fragment，LiveData也会立即更新，例如屏幕旋转，我们通常要在onSaveInstanceState()中来保存数据，在onCreate()中恢复数据，而使用LiveData不再需要这些繁琐的操作了。 </p>
+</li>
+<li><p><strong>便捷使用，拒绝内存泄漏和崩溃</strong><br>我们常常在Activity或Fragment中保持数据却忘记在销毁引用从而导致内存泄漏，而LiveData不用担心此问题，它会绑定LifeCycle对象，关联着该对象的生命周期，在该对象被销毁时LiveData也跟着自我清理，所以不再需要手动处理生命周期相关操作。<br>由于LiveData绑定了LifeCycle对象，也不会因为Activity处于停止状态而导致崩溃，这时候对象不会接受任何LiveData的通知事件，LiveData只在界面可见时才会进行响应，避免常见的NPE（空异常）等问题。<br>开发过程中LiveData的数据源大致有两种，一个是来自于网络请求的结果，一个是来自本地内存或外存中的数据。  </p>
+</li>
+</ul>
+<h1 id="2-使用体验"><a href="#2-使用体验" class="headerlink" title="2. 使用体验"></a>2. 使用体验</h1><p>以下介绍LiveData的各种使用姿势，示例代码为Kotlin。  </p>
+<h2 id="2-1-初体验"><a href="#2-1-初体验" class="headerlink" title="2.1 初体验"></a>2.1 初体验</h2><ul>
+<li><strong>创建LiveData对象</strong>  </li>
+</ul>
+<p>在LiveData中，你可以封装任何类型的数据，而LiveData对象通常存储在ViewModel对象中，通过getter方法来访问：  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MediaViewModel</span>:<span class="type">AndroidViewModel</span></span>()&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建媒体列表的LiveData</span></span><br><span class="line">    <span class="keyword">val</span> media: MutableLiveData&lt;List&lt;Media&gt;&gt;? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">get</span>() = &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>观察监听</strong>  </li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MediaFragment</span>: <span class="type">Fragment</span></span>()&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> viewModel = MediaModel()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(context:<span class="type">Context</span>?)</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttach(context)</span><br><span class="line">        viewModel.observe(<span class="keyword">this</span>,<span class="keyword">object</span> : Observer&lt;List&lt;Media&gt;&gt;&#123;</span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onChanged</span><span class="params">(t: <span class="type">List</span>&lt;<span class="type">Media</span>&gt;?)</span></span> &#123;</span><br><span class="line">                <span class="comment">//...回调处理，执行更新UI操作</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-单例模式"><a href="#2-2-单例模式" class="headerlink" title="2.2 单例模式"></a>2.2 单例模式</h2><p>我们可以通过使用单一实例模式来扩展LiveData对象，通常可以用于封装系统服务，便于在应用中共享，在自定义的Application类中将该LiveData单例连接到系统服务一次，接下来在Activity或Fragment中只需要执行观察LiveData即可共享资源。同时这种方式遵循了从唯一可信源取材并完成状态的正确分发的状态管理理念。<br>以下附上我的实践代码：  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ViewModel 创建工厂</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ViewModelFactory</span></span>(<span class="keyword">val</span> application: Application) : ViewModelProvider.Factory &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建ViewModel</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> clz ViewModel目标类</span></span><br><span class="line"><span class="comment">     * */</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T : ViewModel&gt;</span> <span class="title">create</span><span class="params">(clz: <span class="type">Class</span>&lt;<span class="type">T</span>&gt;)</span></span>: T &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">val</span> <span class="keyword">constructor</span>: Constructor&lt;*&gt; = clz.getConstructor(Application::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">            <span class="comment">//构造器默认参数为Application</span></span><br><span class="line">            <span class="keyword">val</span> instance = <span class="keyword">constructor</span>.newInstance(application)</span><br><span class="line">            instance <span class="keyword">as</span> T</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line">            <span class="keyword">throw</span> e</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 专辑列表ViewMoel</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AlbumViewModel</span></span>(app: Application) : AndroidViewModel(app) &#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="keyword">data</span>: LiveData&lt;List&lt;Album&gt;&gt;? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">get</span>() = &#123;...&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">        * ViewModel单例</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">var</span> instance: AlbumViewModel? = <span class="literal">null</span></span><br><span class="line">        <span class="meta">@JvmStatic</span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">getInstance</span><span class="params">(app: <span class="type">Application</span>)</span></span>: AlbumViewModel? &#123;</span><br><span class="line">            <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">                instance = ViewModelFactory(app).create(AlbumViewModel::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> instance</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上方法通过实现ViewModel的单例来封装全局的数据服务，这样在应用的Activity或Fragment中只需要从该ViewModel实例中观察相应的LiveData即可。</p>
+<h2 id="2-3-Room与LiveData齐飞"><a href="#2-3-Room与LiveData齐飞" class="headerlink" title="2.3 Room与LiveData齐飞"></a>2.3 Room与LiveData齐飞</h2><p><a href="https://developer.android.com/training/data-storage/room">Jetpack Room（SQLite对象映射库）</a>的查询方法可以不仅返回自定义Entity对象，也可以支持返回LiveData对象，相比于前者，后者具有可观察性，当数据库发生变化，LiveData会收到更新通知。<br>以处理媒体数据库的DAO类为例：  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity(tableName = <span class="meta-string">"album"</span> )</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Album</span></span>()&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey(autoGenerate = true)</span></span><br><span class="line">    <span class="meta">@ColumnInfo(name = <span class="meta-string">"id"</span>)</span></span><br><span class="line">    <span class="keyword">var</span> id:<span class="built_in">Long</span> = <span class="number">0</span></span><br><span class="line">    <span class="keyword">var</span> name:String? = <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MediaDao</span></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 查询专辑</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="meta">@Query(<span class="meta-string">"SELECT * FROM album ORDER BY time DESC"</span>)</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">queryAlbums</span><span class="params">()</span></span>: LiveData&lt;List&lt;Album&gt;&gt;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上例子中查询接口可直接返回封装了Entity数组的LiveData。<br>但有时候需要进行联表查询，这个方法就不那么好用了，若有以下实体</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line"><span class="meta">@Entity(tableName = <span class="meta-string">"album"</span> )</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Album</span></span>()&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey(autoGenerate = true)</span></span><br><span class="line">    <span class="meta">@ColumnInfo(name = <span class="meta-string">"album_id"</span>)</span></span><br><span class="line">    <span class="keyword">var</span> id:<span class="built_in">Long</span> = <span class="number">0</span></span><br><span class="line">    <span class="keyword">var</span> name: String? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">var</span> items: ArrayList&lt;Media&gt;? = <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Entity(tableName = <span class="meta-string">"media"</span>)</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Media</span></span>()&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey(autoGenerate = true)</span></span><br><span class="line">    <span class="meta">@ColumnInfo(name = <span class="meta-string">"media_id"</span>)</span></span><br><span class="line">    <span class="keyword">var</span> id:<span class="built_in">Long</span> = <span class="number">0</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Album类包含了Media列表，而我们得到的LiveData并不能观察到Media数据的变化。<br>Room有个注解<a href="https://developer.android.com/reference/android/arch/persistence/room/Relation">Relation</a>可以用于联表查询。<br>但该方法有个致命的缺点就是无法在Entity中实现，否则编译期就会报错，你还需要再写另一个包含Media列表和对应Album实体的普通类来加持，例如：  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AlbumWithMedia</span></span>()&#123;</span><br><span class="line">    <span class="meta">@Embedded</span></span><br><span class="line">    <span class="keyword">var</span> album: Album? = <span class="literal">null</span></span><br><span class="line">    <span class="meta">@Relation(parentColumn = <span class="meta-string">"album_id"</span>,</span></span><br><span class="line"><span class="meta">            entityColumn = <span class="meta-string">"media_id"</span>,</span></span><br><span class="line"><span class="meta">            entity = Media::class)</span></span><br><span class="line">    <span class="keyword">var</span> items: List&lt;Media&gt;? = <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后通过Room查询接口来获取该类的实体：  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Query(<span class="meta-string">"SELECT * FROM album ORDER BY time DESC"</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">queryAlbums</span><span class="params">()</span></span>: List&lt;AlbumWithMedia&gt;</span><br></pre></td></tr></table></figure>
+<p>但该方法无法在Room查询接口中直接获得该类的LiveData形式封装的实体，并不能达到我们所想要的效果，那怎么办？  </p>
+<h2 id="2-4-转换LiveData"><a href="#2-4-转换LiveData" class="headerlink" title="2.4 转换LiveData"></a>2.4 转换LiveData</h2><p>LifeCycle提供了类<a href="https://developer.android.com/reference/androidx/lifecycle/Transformations">androidx.lifecycle.Transformations</a>，该类提供LiveData的转换方法：      </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Java</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LiveData&lt;Y&gt; <span class="title">map</span> <span class="params">(LiveData&lt;X&gt; source, </span></span></span><br><span class="line"><span class="function"><span class="params">                Function&lt;X, Y&gt; mapFunction)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>以上方法将LiveData<X>转化为LiveData<Y>，以上的Room查询问题我们可以先不用Relation来解决问题，在获得封装了Album列表的LiveData对象后，我们可以再对它进行转换，变成我们所想要的数据：  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获得未包含列表数据的专辑列表</span></span><br><span class="line"><span class="keyword">var</span> albums:LiveData&lt;List&lt;Album&gt;&gt; = ...</span><br><span class="line"><span class="comment">//转换数据 为了能够清晰表现 我就不用lambda了</span></span><br><span class="line"><span class="keyword">var</span> newAlbums:LiveData&lt;List&lt;Album&gt;&gt; = </span><br><span class="line">    Transformations.switchMap(albums,</span><br><span class="line">        <span class="keyword">object</span> :Function&lt;List&lt;Album&gt;,LiveData&lt;List&lt;NewAlbum&gt;&gt;&gt; &#123;</span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">apply</span><span class="params">(input: <span class="type">List</span>&lt;<span class="type">Album</span>&gt;?)</span></span>: LiveData&lt;List&lt;NewAlbum&gt;&gt; &#123;</span><br><span class="line">                <span class="keyword">val</span> albumsMediatorLiveData: MediatorLiveData&lt;List&lt;NewAlbum&gt;&gt; = </span><br><span class="line">                    MediatorLiveData&lt;List&lt;NewAlbum&gt;&gt;()</span><br><span class="line">                <span class="keyword">for</span> (album <span class="keyword">in</span> input!!) &#123;</span><br><span class="line">                    <span class="comment">//获取该专辑的媒体列表数据 这里可以通过另一个Room查询接口获取</span></span><br><span class="line">                    <span class="keyword">val</span> mediaList:LiveData&lt;List&lt;Media&gt;&gt; = ...</span><br><span class="line">                    <span class="comment">//增加数据源及监听</span></span><br><span class="line">                    albumsMediatorLiveData.addSource(mediaList,</span><br><span class="line">                        <span class="keyword">object</span> :Observer&lt;List&lt;Media&gt;&gt;&#123;</span><br><span class="line">                            <span class="comment">//当某个专辑的子列表数据出现变化 则将这个变化传递至专辑列表</span></span><br><span class="line">                            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onChanged</span><span class="params">(<span class="keyword">data</span>: <span class="type">List</span>&lt;<span class="type">Media</span>&gt;)</span></span> &#123;</span><br><span class="line">                                album.items = <span class="keyword">data</span></span><br><span class="line">                                albumMediatorLiveData.postValue(input)</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    )</span><br><span class="line">                &#125;   </span><br><span class="line">                <span class="keyword">return</span> albumsMediatorLiveData</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-源码简析"><a href="#3-源码简析" class="headerlink" title="3. 源码简析"></a>3. 源码简析</h1><p>LiveData类源码详见<a href="http://androidxref.com/9.0.0_r3/xref/frameworks/support/lifecycle/livedata-core/src/main/java/androidx/lifecycle/LiveData.java">frameworks/support/lifecycle/livedata-core/src/main/java/androidx/lifecycle/LiveData.java</a>。该类为抽象类。<br>以下列出LiveData主要的方法：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//MutableLiveData.java</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">LiveData</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="comment">// 绑定Observer，监听数据更新</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">observe</span><span class="params">(@NonNull LifecycleOwner owner, @NonNull Observer&lt;T&gt; observer)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">observeForever</span><span class="params">(@NonNull Observer&lt;T&gt; observer)</span></span>;</span><br><span class="line">    <span class="comment">//更新数据(同步)，须在主线程中执行</span></span><br><span class="line">    <span class="meta">@MainThread</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T value)</span></span>;</span><br><span class="line">    <span class="comment">//更新数据(异步)，可以在子线程中执行</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">postValue</span><span class="params">(T value)</span></span>;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getValue</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//当开始存在活跃的Observer时回调该方法</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActive</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//当所有活跃的Observer移除后回调该方法</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onInactive</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="meta">@MainThread</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeObserver</span><span class="params">(@NonNull <span class="keyword">final</span> Observer&lt;? <span class="keyword">super</span> T&gt; observer)</span></span>;</span><br><span class="line">    <span class="meta">@MainThread</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeObservers</span><span class="params">(@NonNull <span class="keyword">final</span> LifecycleOwner owner)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>回调接口Observer：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Observer</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当数据变化时调用</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> t 新数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onChanged</span><span class="params">(@Nullable T t)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-1-监听变化-——-observe-observeForever"><a href="#3-1-监听变化-——-observe-observeForever" class="headerlink" title="3.1 监听变化 —— observe()/observeForever()"></a>3.1 监听变化 —— observe()/observeForever()</h2><h3 id="3-1-1-具有生命周期安全的observe"><a href="#3-1-1-具有生命周期安全的observe" class="headerlink" title="3.1.1 具有生命周期安全的observe()"></a>3.1.1 具有生命周期安全的observe()</h3><p>方法源码如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//LiveData.java</span></span><br><span class="line"><span class="meta">@MainThread</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">observe</span><span class="params">(@NonNull LifecycleOwner owner, @NonNull Observer&lt;? <span class="keyword">super</span> T&gt; observer)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//该方法须在主线程（UI线程）中执行，否则将抛出异常</span></span><br><span class="line">    assertMainThread(<span class="string">"observe"</span>);</span><br><span class="line">    <span class="comment">//如当前UI的状态的是DESTROYED，就不绑定这个回调了</span></span><br><span class="line">    <span class="keyword">if</span> (owner.getLifecycle().getCurrentState() == DESTROYED) &#123;</span><br><span class="line">            <span class="comment">// ignore</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    LifecycleBoundObserver wrapper = <span class="keyword">new</span> LifecycleBoundObserver(owner, observer);</span><br><span class="line">    ObserverWrapper existing = mObservers.putIfAbsent(observer, wrapper);</span><br><span class="line">    <span class="comment">//已经绑定了其他Owner的Observer不能再重复绑定</span></span><br><span class="line">    <span class="keyword">if</span> (existing != <span class="keyword">null</span> &amp;&amp; !existing.isAttachedTo(owner)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Cannot add the same observer"</span></span><br><span class="line">                    + <span class="string">" with different lifecycles"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (existing != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//把wrapper 与Activity/Fragment的生命周期,建立关系，</span></span><br><span class="line">    <span class="comment">//当UI的生命周期发生变化的时候，就会去回调wrapper中的 onStateChanged</span></span><br><span class="line">    owner.getLifecycle().addObserver(wrapper);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接口包含两个参数，一个是LifecycleOwner对象，Activity和Fragment等都已实现该接口，可直接传入，Owner可直接获取当前的生命周期所对应的状态，若当前状态为已销毁，则取消绑定Observer的操作；<br>另一个是带泛型参数的Observer对象，Observer接口包含数据更新回调的方法；<br>在方法内部，LiveData先将Observer封装为LifecycleBoundObserver实例，LifecycleBoundObserver为一个内部类，其包含了一系列状态变换的相关操作，接着将Observer与封装好的wrapper存入缓存中。最后将LifecycleBoundObserver实例与Owner注册绑定。<br>方法中还会进行一个Observer去重操作，如果observer缓存已存在并且已经和另一个LifecycleOwner绑定，则抛出异常。<br>原则上一个Observer只能和一个Owner绑定，否则当数据发生变化时，可能Observer还在销毁状态时就进行回调，达不到预期的生命周期安全。  </p>
+<p>LifeCycleOwner有如下几种状态：  </p>
+<blockquote>
+<p>Lifecycle.State.STARTED<br>Lifecycle.State.RESUMED<br>Lifecycle.State.DESTROYED  </p>
+</blockquote>
+<p>当LifeCycleOwner处于STARTED或RESUMED状态时，Observer才会接收到更新事件，当走到了DESTROYED状态，将自动销毁Observer对象。  </p>
+<h2 id="3-1-2-非生命周期安全的observeForever"><a href="#3-1-2-非生命周期安全的observeForever" class="headerlink" title="3.1.2 非生命周期安全的observeForever()"></a>3.1.2 非生命周期安全的observeForever()</h2><p>方法源码如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//LiveData.java</span></span><br><span class="line"><span class="meta">@MainThread</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">observeForever</span><span class="params">(@NonNull Observer&lt;? <span class="keyword">super</span> T&gt; observer)</span> </span>&#123;</span><br><span class="line">    assertMainThread(<span class="string">"observeForever"</span>);</span><br><span class="line">    AlwaysActiveObserver wrapper = <span class="keyword">new</span> AlwaysActiveObserver(observer);</span><br><span class="line">    ObserverWrapper existing = mObservers.putIfAbsent(observer, wrapper);</span><br><span class="line">    <span class="keyword">if</span> (existing != <span class="keyword">null</span> &amp;&amp; existing <span class="keyword">instanceof</span> LiveData.LifecycleBoundObserver) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Cannot add the same observer"</span></span><br><span class="line">                   + <span class="string">" with different lifecycles"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (existing != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    wrapper.activeStateChanged(<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与observe()方法不同的是，当调用observeForever()来注册Observer时，Observer将在任何时候都能接收到事件，且不会被自动移除，同时LiveData也会被一直标记为活跃状态，且与Observer绑定的是AlwaysActiveObserver，差别就在于是否与生命周期相绑定。</p>
+<h2 id="3-2-状态操作-——-ObserverWrapper"><a href="#3-2-状态操作-——-ObserverWrapper" class="headerlink" title="3.2 状态操作 —— ObserverWrapper"></a>3.2 状态操作 —— ObserverWrapper</h2><p>LifecycleBoundObserver与AlwaysActiveObserver都为ObserverWrapper的具体实现，而ObserverWrapper中封装了关于状态的操作，可以收到LifeCycle的每次生命周期切换时的事件回调，Wrapper在每次活跃状态变化或者接受到新的值时控制observer是否应该接受到新的值。<br>LifecycleBoundObserver实现源码如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//LiveData.java</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LifecycleBoundObserver</span> <span class="keyword">extends</span> <span class="title">ObserverWrapper</span> <span class="keyword">implements</span> <span class="title">GenericLifecycleObserver</span> </span>&#123;</span><br><span class="line">    <span class="meta">@NonNull</span> <span class="keyword">final</span> LifecycleOwner mOwner;</span><br><span class="line">    LifecycleBoundObserver(<span class="meta">@NonNull</span> LifecycleOwner owner, Observer&lt;? <span class="keyword">super</span> T&gt; observer) &#123;</span><br><span class="line">        <span class="keyword">super</span>(observer);</span><br><span class="line">        mOwner = owner;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用于获取当前 Lifecycle 是否处于活跃状态</span></span><br><span class="line"><span class="comment">     * 当owner状态处于STARTED或RESUME，则判断为活跃状态</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">shouldBeActive</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mOwner.getLifecycle().getCurrentState().isAtLeast(STARTED);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStateChanged</span><span class="params">(LifecycleOwner source, Lifecycle.Event event)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//当owner状态转变为DESTROYED 移除observer对象</span></span><br><span class="line">        <span class="keyword">if</span> (mOwner.getLifecycle().getCurrentState() == DESTROYED) &#123;</span><br><span class="line">            removeObserver(mObserver);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//传递状态变化</span></span><br><span class="line">        activeStateChanged(shouldBeActive());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判断Owner对象是否与Observer绑定</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isAttachedTo</span><span class="params">(LifecycleOwner owner)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mOwner == owner;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//移除Observer</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">detachObserver</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mOwner.getLifecycle().removeObserver(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ObserverWrapper抽象类源码如下： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//LiveData.java</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ObserverWrapper</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">activeStateChanged</span><span class="params">(<span class="keyword">boolean</span> newActive)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (newActive == mActive) &#123;</span><br><span class="line">            <span class="comment">//状态未发送改变</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        mActive = newActive;</span><br><span class="line">        <span class="keyword">boolean</span> wasInactive = LiveData.<span class="keyword">this</span>.mActiveCount == <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//更新活跃观察者的数量</span></span><br><span class="line">        LiveData.<span class="keyword">this</span>.mActiveCount += mActive ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (wasInactive &amp;&amp; mActive) &#123;</span><br><span class="line">            <span class="comment">//当Owner状态转为活跃 </span></span><br><span class="line">            onActive();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (LiveData.<span class="keyword">this</span>.mActiveCount == <span class="number">0</span> &amp;&amp; !mActive) &#123;</span><br><span class="line">             <span class="comment">//当Owner状态转为非活跃 </span></span><br><span class="line">            onInactive();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mActive) &#123;</span><br><span class="line">            <span class="comment">//转变为活跃时分发数据</span></span><br><span class="line">            dispatchingValue(<span class="keyword">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总结一下LifecycleBoundObserver的大致流程就是：   </p>
+<ol>
+<li>LifeCycleOnwe生命周期发生变化，回调onStateChanged方法；  </li>
+<li>onStateChange()方法首先判断 Lifecycle 是否已处于 DESTROYED 状态，是的话则直接移除 Observer，整个回调流程结束，否则则继续以下流程；    </li>
+<li>调用activeStateChanged()方法，如果Onwer从非活跃态转变为活跃态，则调用dispatchingValue()方法来分发数据，最终在ObserverWrapper内根据数据版本号来判断是否有新值再去回调。      </li>
+</ol>
+<h2 id="3-3-更新数据-——-setValue-postValue"><a href="#3-3-更新数据-——-setValue-postValue" class="headerlink" title="3.3 更新数据 —— setValue/postValue"></a>3.3 更新数据 —— setValue/postValue</h2><p>给LiveData设置新值是通过调用setValue/postValue方法实现的，其中setValue必须在主线程上执行，而postValue可以在子线程中执行，实际上也是通过Handler切换到主线程去执行setValue。相关源码如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//LiveData.java</span></span><br><span class="line"><span class="meta">@MainThread</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    assertMainThread(<span class="string">"setValue"</span>);</span><br><span class="line">    mVersion++;</span><br><span class="line">    mData = value;</span><br><span class="line">    dispatchingValue(<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">postValue</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> postTask;</span><br><span class="line">    <span class="keyword">synchronized</span> (mDataLock) &#123;</span><br><span class="line">        postTask = mPendingData == NOT_SET;</span><br><span class="line">         mPendingData = value;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!postTask) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ArchTaskExecutor.getInstance().postToMainThread(mPostValueRunnable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以注意到setValue方法中涉及到一个变量mVersion，维护该变量是为记录值的版本号，即每次更新值的时候版本号都会进行自增，同时在ObserverWrapper也维护了一个变量mLastVersion，用于记录observer对象最近一次接受的值的版本号。<br>当在分发数据的时候，如果mLastVersion大于mVersion，说明observer已经接收过最新值了，于是不再向它传递该值。    </p>
+<h2 id="3-4-LiveData的子类MutableLiveData-MediatorLiveData"><a href="#3-4-LiveData的子类MutableLiveData-MediatorLiveData" class="headerlink" title="3.4 LiveData的子类MutableLiveData/MediatorLiveData"></a>3.4 LiveData的子类MutableLiveData/MediatorLiveData</h2><p>实际上LiveData本身为一个抽象类，官方提供了两个LiveData的实现类————MutableLiveData和MediatorLiveData。<br>其源码较简单，两者都将LiveData的setValue()和postValue()方法的访问权限提升为public，从而让外部可以直接调用这两个方法。  </p>
+<h3 id="MutableLiveData"><a href="#MutableLiveData" class="headerlink" title="MutableLiveData"></a>MutableLiveData</h3><p>它是LiveData最简单的实现，职责与LiveData基本一致。<br>但存在一些区别：不同于LiveData实体类可以通知指定某个字段的数据更新，MutableLiveData在整个实体类或者数据类型变化后才通知，不会细节到某个字段，</p>
+<h3 id="MediatorLiveData"><a href="#MediatorLiveData" class="headerlink" title="MediatorLiveData"></a>MediatorLiveData</h3><p>相比MutableLiveData，这个子类会酷一些。<br>MediatorLiveData类具有一个<a href="https://developer.android.com/reference/android/arch/lifecycle/MediatorLiveData#addsource">addSource()</a>方法，其存在的意义在于能够将多个LiveData数据源集合起来，如下例子：  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MediatorLiveDataFragment</span> : <span class="type">Fragment</span></span>() &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> changeObserver = Observer&lt;String&gt; &#123;     value -&gt;</span><br><span class="line">        value?.let &#123; txt_fragment.text = it &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(context: <span class="type">Context</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttach(context)</span><br><span class="line">        <span class="keyword">val</span> mediatorLiveData = MediatorLiveData&lt;String&gt;()</span><br><span class="line">        mediatorLiveData.addSource(getliveDataA())</span><br><span class="line">              &#123; mediatorLiveData.value = <span class="string">"A:<span class="variable">$it</span>"</span> &#125;</span><br><span class="line">        mediatorLiveData.addSource(getliveDataB())</span><br><span class="line">              &#123; mediatorLiveData.value = <span class="string">"B:<span class="variable">$it</span>"</span> &#125;</span><br><span class="line">        mediatorLiveData.observe(<span class="keyword">this</span>, changeObserver)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码中，Fragment可以同时接收到LiveDataA和LiveDataB的数据变化，但值得注意的是，当A和B的数据都发生变化时，MediatorLiveData将获取最后添加的LiveData的数据，即LiveDataB。</p>
+<h2 id="3-5-总结"><a href="#3-5-总结" class="headerlink" title="3.5 总结"></a>3.5 总结</h2><p>实际上LiveData能够感知生命周期是依附于LifeCycle那一套组件实现的，在26.1.0的support包以后及AndroidX中Activity和Fragment已经默认实现了LifecycOwner接口，内部存在LifecycleRegistry来存储生命周期的状态和事件，有时间我的话将再写一篇关于LifeCycle的学习博客^_^。<br>LiveData作为Jetpack的重要成员，它的设计理念其实比较简单，其诞生的目的就是为了更安全和便捷的去更新UI，有利于打造高效可靠的应用，对LifeCycle、Room、Databinding等Jetpack组件有天生的搭配优势，是第三方库不可比拟的。<br>虽然源码才不到五百行，但它可玩的花样非常多，例如LiveData可通过扩展改造作为数据通信总线LiveDataBus。</p>
+<h2 id="More"><a href="#More" class="headerlink" title="More"></a>More</h2><p>这里我推荐一些关于LiveData与ViewModel的博客或资料，同时我也从中参考了许多。    </p>
+<blockquote>
+<p><a href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData官方文档</a><br><a href="https://medium.com/androiddevelopers/viewmodels-and-livedata-patterns-antipatterns-21efaef74a54">ViewModels and LiveData: Patterns + AntiPatterns</a><br><a href="https://proandroiddev.com/android-room-handling-relations-using-livedata-2d892e40bd53">Android Room: Handling Relations Using LiveData</a><br><a href="https://developer.android.com/topic/libraries/architecture/coroutines">协程文档，包括与LiveData一起工作</a><br><a href="https://tech.meituan.com/2018/07/26/android-livedatabus.html">Android消息总线的演进之路：用LiveDataBus替代RxBus、EventBus</a>    </p>
+</blockquote>
+<p>以下推荐相关实践项目:  </p>
+<blockquote>
+<p><a href="https://github.com/android/sunflower">官方Jetpack最佳实践demo——sunflower</a><br><a href="https://github.com/KunMinX/Jetpack-MVVM-Best-Practice">KunMinX的Jetpack MVVM 最佳实践案例</a></p>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Android/" rel="tag">Android</a>, <a class="has-link-grey -link" href="/tags/Jetpack/" rel="tag">Jetpack</a>, <a class="has-link-grey -link" href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag">技术</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/alipay-qrcode.jpg" alt="支付宝"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/02/JNI%20memory%20leak/">
+                <span class="level-item">JNI中的内存泄漏</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="/images/avatar.png" alt="Weikun">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Weikun
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Android Devloper
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>China,Fujian</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            8
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            1
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            7
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/MyDearEsther" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/MyDearEsther">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Facebook" href="https://www.facebook.com/ezio.lin.752">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Twitter" href="https://twitter.com/568054764">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://google.com" target="_blank" rel="noopener">
+                    <span class="level-left">
+                        <span class="level-item">Google</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">google.com</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://stackoverflow.com/" target="_blank" rel="noopener">
+                    <span class="level-left">
+                        <span class="level-item">StackOverFlow</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">stackoverflow.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/%E6%8A%80%E6%9C%AF/">
+            <span class="level-start">
+                <span class="level-item">技术</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/05/30/LiveData/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Jetpack学习之旅 —— LiveData">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-30T14:30:00.000Z">2020-05-30</time></div>
+                    <a href="/2020/05/30/LiveData/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Jetpack学习之旅 —— LiveData</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/04/02/JNI%20memory%20leak/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JNI中的内存泄漏">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-02T14:30:00.000Z">2020-04-02</time></div>
+                    <a href="/2020/04/02/JNI%20memory%20leak/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JNI中的内存泄漏</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/28/Netty%E5%85%A5%E9%97%A8%E4%B9%8B%E6%89%93%E9%80%A0%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84RPC%E6%A1%86%E6%9E%B6/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Netty入门之打造一个简易的RPC框架">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-28T14:00:00.000Z">2019-12-28</time></div>
+                    <a href="/2019/12/28/Netty%E5%85%A5%E9%97%A8%E4%B9%8B%E6%89%93%E9%80%A0%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84RPC%E6%A1%86%E6%9E%B6/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Netty入门之打造一个简易的RPC框架</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/23/Android%20Bluetooth%E6%95%B4%E7%90%86/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Android Bluetooth整理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-23T09:30:00.000Z">2019-12-23</time></div>
+                    <a href="/2019/12/23/Android%20Bluetooth%E6%95%B4%E7%90%86/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Android Bluetooth整理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/23/%E5%BC%80%E5%8F%91%E7%B3%BB%E7%BB%9F%E5%BC%B9%E6%A1%86%E5%BA%94%E7%94%A8%E9%9A%8F%E8%AE%B0/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="开发系统弹框应用随记">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-23T09:30:00.000Z">2019-12-23</time></div>
+                    <a href="/2019/12/23/%E5%BC%80%E5%8F%91%E7%B3%BB%E7%BB%9F%E5%BC%B9%E6%A1%86%E5%BA%94%E7%94%A8%E9%9A%8F%E8%AE%B0/" class="title has-link-black-ter is-size-6 has-text-weight-normal">开发系统弹框应用随记</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Android/" style="font-size: 16.67px;">Android</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Netty/" style="font-size: 10px;">Netty</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 20px;">技术</a> <a href="/tags/%E8%93%9D%E7%89%99/" style="font-size: 13.33px;">蓝牙</a>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/1996/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 1996</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Android/">
+                        <span class="tag">Android</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JNI/">
+                        <span class="tag">JNI</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Java/">
+                        <span class="tag">Java</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Jetpack/">
+                        <span class="tag">Jetpack</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Netty/">
+                        <span class="tag">Netty</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%E6%8A%80%E6%9C%AF/">
+                        <span class="tag">技术</span>
+                        <span class="tag is-grey">8</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%E8%93%9D%E7%89%99/">
+                        <span class="tag">蓝牙</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Android/" style="font-size: 16.67px;">Android</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Netty/" style="font-size: 10px;">Netty</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 20px;">技术</a> <a href="/tags/%E8%93%9D%E7%89%99/" style="font-size: 13.33px;">蓝牙</a>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/1996/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 1996</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Android/">
+                        <span class="tag">Android</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JNI/">
+                        <span class="tag">JNI</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Java/">
+                        <span class="tag">Java</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Jetpack/">
+                        <span class="tag">Jetpack</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Netty/">
+                        <span class="tag">Netty</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%E6%8A%80%E6%9C%AF/">
+                        <span class="tag">技术</span>
+                        <span class="tag is-grey">8</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%E8%93%9D%E7%89%99/">
+                        <span class="tag">蓝牙</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Jetpack学习之旅 —— LiveData" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 Weikun&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://mydearesther.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
